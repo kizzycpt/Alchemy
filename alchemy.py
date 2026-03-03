@@ -19,7 +19,7 @@ gatewayscan = gateway_info()
 #MAIN Execution
 
 if __name__ == "__main__":
-    title_text = pyfiglet.figlet_format("-----------\n      B-Line \n----------", font= "slant", width=200)
+    title_text = pyfiglet.figlet_format("-----------\n      Alchemy \n----------", font= "slant", width=200)
     arp_scan_text = pyfiglet.figlet_format("-----------\n ARP Scan \n----------", font= "slant", width=200)
     arp_poison_emoji = r"""
                           ++++++++++++                

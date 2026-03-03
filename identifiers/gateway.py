@@ -8,19 +8,16 @@ import subprocess
 def arp_router_mac(ip: str) -> str | None:
     try:
         if sys.platform.startswith("linux"):
-            # ip neigh show <ip>
                 out = subprocess.check_output(["ip", "neigh", "show", ip], text=True, stderr=subprocess.DEVNULL)
                 m = re.search(r"lladdr\s+([0-9a-f:]{17})", out, re.IGNORECASE)
                 return m.group(1).lower() if m else None
 
         elif sys.platform == "darwin":
-                # arp -n <ip>
                 out = subprocess.check_output(["arp", "-n", ip], text=True, stderr=subprocess.DEVNULL)
                 m = re.search(r"at\s+([0-9a-f:]{17})", out, re.IGNORECASE)
                 return m.group(1).lower() if m else None
 
         elif sys.platform.startswith("win"):
-            # arp -a <ip> (may list all entries; filter by IP)
             out = subprocess.check_output(["arp", "-a"], text=True, stderr=subprocess.DEVNULL)
             for line in out.splitlines():
                 if ip in line:
@@ -42,7 +39,7 @@ def gateway_info():
 
         router_ip, interface = default
 
-        # Best-effort MAC lookup. Often requires that the router_ip is in ARP/neighbor cache.
+        # tryna run MAC lookup. the router_ip is in ARP/neighbor cache.
         router_mac = arp_router_mac(router_ip)
 
         info = {"Gateway": router_ip, "Interface": interface, "MAC": router_mac}

