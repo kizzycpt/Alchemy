@@ -10,7 +10,7 @@ import netifaces
 import ipaddress
 from identifiers.mac import get_mac, get_my_mac
 from identifiers.gateway import gateway_info, arp_router_mac
-from poisons.ARP import arp_poison
+from poisons.ARP import arp_cache_poison, arp_vlan_poison, arp_monitor_callback
 
 
 console = Console()
@@ -58,24 +58,27 @@ if __name__ == "__main__":
         "Attack: ").strip().lower() 
 
         if choice == "1":
+            #introductory to poison
             console.print(f"[red]{arp_poison_emoji}")
             console.print(f"[red]\n{arp_poison_text}\n")
             console.print("[yellow]------------------------------------------------------------ \n")
-            target_ip = console.input("[yellow]| Enter Target IP:")
+            
             ROUTER_INFO = gateway_info()
-            if ROUTER_INFO and ROUTER_INFO.get("Gateway"):
-                router_ip = ROUTER_INFO["Gateway"]
-                router_mac = ROUTER_INFO.get("MAC")
-                arp_poison(
-                target_ip,
-                router_ip,
-                router_mac,
-                target_mac = get_mac(target_ip),
-                source_mac = get_my_mac()
-                )
-            else:
-                console.print("[red]Router information is not available. Cannot proceed with ARP Poisoning.")
 
+            arp_type = console.input("[yellow]Classic Cache Poison [1] \nVlan Cache Poison [2] \nPlease Select: ")
+
+            if arp_type == "1":
+
+                target_ip = console.input("[yellow]| Enter Target IP:")
+                if ROUTER_INFO:
+                    arp_cache_poison()
+                else: 
+                    console.print("[red] Necessary Information is not available. Cannot proceed with poisoning.")
+
+            elif arp_type == "2":
+                arp_vlan_poison()
+            else:
+                        console.print("[red]Invalid choice. Please select a valid option.")
         elif choice == "2":
             console.print("[red]Exiting the tool. Goodbye!")
             break

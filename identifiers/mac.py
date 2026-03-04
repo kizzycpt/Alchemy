@@ -1,4 +1,4 @@
-from scapy.all import IP, ARP, Ether, srp, sendp, conf, get_if_list, TCP, RandShort, RandIP, UDP, RandMAC
+from scapy.all import *
 import ipaddress, socket, time
 from rich.console import Console
 from rich.table import Table
@@ -9,9 +9,8 @@ from termcolor import colored
 import netifaces
 import ipaddress
 
-#Unwanted interface prefixes
-bad_iface_prefixes = ("lo", "docker", "wg", "br-", "veth", "virbr", "zt", "vboxnet")
 
+router_mac = hosts.get(gateway_info.get("gateway"))
 
 
 def get_mac(ip):
@@ -27,7 +26,7 @@ def get_mac(ip):
     answered, _ = srp(arp_packet, timeout = 2, verbose = 0)
     for sent, received in answered:
         return received.hwsrc
-
+    
     return None
 
 
