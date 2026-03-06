@@ -11,8 +11,7 @@ import pyfiglet
 from termcolor import colored
 import netifaces
 import ipaddress
-from identifiers.mac import get_mac, get_my_mac
-
+from identifiers.mac import *
 #variables in the rich library
 console = Console()
 #----------------------------------------------------------------------------------------------------------------------------------------------------------

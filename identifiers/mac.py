@@ -8,22 +8,16 @@ import pyfiglet
 from termcolor import colored
 import netifaces
 import ipaddress
+from poisons.ARP import *
+from identifiers.gateway import gateway_info
+import identifiers.vars
 
-
-router_mac = hosts.get(gateway_info.get("gateway"))
 
 
 def get_mac(ip):
-   
-   #MAC variables 
-    arp_req = ARP(pdst = ip)
-    broadcast = Ether(dst="ff:ff:ff:ff:ff:ff")
-   
-    #ARP Packet Formula
-    arp_packet = broadcast/arp_req
-
+ 
     #Reply loop for ARP Request
-    answered, _ = srp(arp_packet, timeout = 2, verbose = 0)
+    answered = result
     for sent, received in answered:
         return received.hwsrc
     

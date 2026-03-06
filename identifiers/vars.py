@@ -1,0 +1,44 @@
+#imports
+import netifaces
+from scapy.all import *
+import ipaddress
+import subprocess
+import sys
+import requests
+from identifiers.gateway import gateway_info
+
+#Gateway Variables
+gws = netifaces.gateways()
+router_ip, iface = gws["default"][netifaces.AF_INET]
+ip_info = netifaces.ifaddresses(iface)[netifaces.AF_INET][0]
+addr  = ip_info["addr"]
+mask = ip_info["netmask"]
+subnet = ipaddress.IPv4Network(f"{addr}/{mask}", strict = False)
+
+#ARP Packet Formula
+arp_req = ARP(pdst = subnet)
+broadcast = Ether(dst="ff:ff:ff:ff:ff:ff")
+arp_packet = broadcast/arp_req
+
+
+#Packet Deployment
+result = srp(arp_packet, timeout=2, verbose=0)[0]
+
+
+
+#MAC variables 
+def node_id():
+    hosts: dict[str, str] = {}
+    for _, received in result:
+        if not quiet:
+            print(f"[+] Host found: {received.psrc} - MAC: {received.hwsrc}")
+        hosts[received.psrc] = received.hwsrc
+    return hosts
+hosts = node_id()
+router_mac = hosts.get(gateway_info()["Gateway"])
+
+
+
+
+#unwanted prefixes
+bad_iface_prefixes = ("lo", "docker", "wg", "br-", "veth", "virbr", "zt", "vboxnet")
