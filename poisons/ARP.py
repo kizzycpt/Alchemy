@@ -11,24 +11,6 @@ import pyfiglet
 from termcolor import colored
 import netifaces
 import ipaddress
-<<<<<<< HEAD
-from identifiers.mac import *
-
-#----------------------------------------------------------------------------------------------------------------------------------------------------------
-
-#variables in the rich library
-console = Console()
-
-#----------------------------------------------------------------------------------------------------------------------------------------------------------
-
-    # scapy poison packet interferes with ARP table cache 
-def arp_cache_poison(target_ip, router_ip, router_mac, target_mac, source_mac):
-    target_ip = console.input("[yellow]| Enter Target IP:")
-    target_mac = get_mac(target_ip)
-    if not target_mac:
-        console.print(f"[red] Could not resolve MAC for {target_ip}")
-        return 
-=======
 from identifiers.ether import get_mac, get_my_mac, arp_scan
 from identifiers.gateway import gateway_info, get_gateway_mac
 
@@ -58,7 +40,6 @@ def arp_cache_poison(target_ip=None, router_ip=None, router_mac=None, target_mac
         if not source_mac:
             console.print(f"[red] Could not resolve MAC for host")
             return
->>>>>>> 15bbdbd (first successful version)
 
         if router_mac is None:
             router_mac = gateway_mac
