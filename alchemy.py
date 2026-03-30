@@ -12,12 +12,14 @@ from identifiers.ether import get_mac, get_my_mac, arp_scan
 from identifiers.gateway import gateway_info
 from poisons.ARP import arp_cache_poison, arp_vlan_poison
 
-
+#------------------------------------------------------------------
+#Global Variables
 console = Console()
 gatewayscan = gateway_info()
 
-#MAIN Execution
+#------------------------------------------------------------------
 
+#MAIN Execution
 if __name__ == "__main__":
     title_text = pyfiglet.figlet_format("-----------\n      Alchemy \n----------", font= "slant", width=200)
     arp_scan_text = pyfiglet.figlet_format("-----------\n ARP Scan \n----------", font= "slant", width=200)

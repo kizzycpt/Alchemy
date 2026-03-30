@@ -11,17 +11,19 @@ import ipaddress
 from .gateway import gateway_info
 
 
-#unwanted prefixes
+#Unwanted Interface Prefixes
+
 bad_iface_prefixes = ("lo", "docker", "wg", "br-", "veth", "virbr", "zt", "vboxnet")
+
 #----------------------------------------------------------------------------------------------
 
-
+#Subnet Information
 def get_subnet():
     try:
         local_ip = socket.gethostbyname(socket.gethostname())
         subnet_mask = "255.255.255.0"
         network = ipaddress.IPv4Network(f"{local_ip}/{subnet_mask}", strict = False)
-        cidr = str(network.network_address)+ "/24"
+        cidr = str(network.network_address) + "/24"
 
         return cidr
     except Exception as e:
@@ -31,31 +33,7 @@ def get_subnet():
 
 #----------------------------------------------------------------------------------------------
 
-def arp_scan(quiet: bool = False ) -> dict[str, str]:
-    
-    subnet = get_subnet()
-
-    arp = ARP(pdst=subnet)
-    ether = Ether(dst = "ff:ff:ff:ff:ff:ff")
-
-    packet = ether/arp
-
-    try:
-        result, _ = srp(packet, timeout = 0, verbose = 0)
-    except PermissionError:
-        console.print = ("[red] Scapy needs permission for ARP scan on linux. [/red]]")
-        return {}
-    
-    hosts: dict[str, str] = {}
-    for sent, received in result:
-        if not quiet:
-            print(f"hosts found: {received.psrc} - MAC: {received.hwsrc}\n")
-        hosts[received.psrc] = received.hwsrc
-
-    return hosts
-
-
-
+# Grabbing target IP based off input
 def get_mac(ip):
    
    #MAC variables 
@@ -72,7 +50,7 @@ def get_mac(ip):
     
     return None
 
-
+#Recieving Source MAC for Packet Sending
 def get_my_mac():
     try:
         for iface in netifaces.interfaces():
@@ -94,5 +72,27 @@ def get_my_mac():
     except Exception as e:
         print(f"Error in resolving MAC Address. {e}.")
         return {}
- 
 
+
+#ARP Broadcast: Replies with IP:MAC
+def arp_scan(quiet: bool = False ) -> dict[str, str]:
+    
+    subnet = get_subnet()
+
+    arp = ARP(pdst=subnet)
+    ether = Ether(dst = "ff:ff:ff:ff:ff:ff")
+
+    packet = ether/arp
+
+    try:
+        result, _ = srp(packet, timeout = 0, verbose = 0)
+    except PermissionError:
+        console.print = ("[red] Scapy needs permission for ARP scan on linux. [/red]]")
+        return {}
+    
+    hosts: dict[str, str] = {}
+    for sent, received in result:
+        if not quiet:
+            print(f"hosts found: {received.psrc} - MAC: {received.hwsrc}\n")
+        hosts[received.psrc] = received.hwsrc
+    return hosts

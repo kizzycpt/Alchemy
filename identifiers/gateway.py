@@ -4,6 +4,8 @@ import requests
 import subprocess
 from scapy.all import ARP, Ether, srp
 
+
+#Acquiring Gateway Information (IP, Interface)
 def gateway_info():
     try:
         gws = netifaces.gateways()
@@ -19,7 +21,7 @@ def gateway_info():
         return None
 
 
-
+#Acquiring Gateway MAC
 
 def get_gateway_mac():
 

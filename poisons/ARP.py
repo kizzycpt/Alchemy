@@ -17,11 +17,14 @@ from identifiers.gateway import gateway_info, get_gateway_mac
 #variables in the rich library
 console = Console()
 #----------------------------------------------------------------------------------------------------------------------------------------------------------
+#Global Variables
+
 router = gateway_info()
 gateway_mac = get_gateway_mac()
+
 #----------------------------------------------------------------------------------------------------------------------------------------------------------
 
-    # scapy poison packet insertions under layer2 protocol 
+# Scapy ARP poison packet insertions under layer2 protocol 
 def arp_cache_poison(target_ip=None, router_ip=None, router_mac=None, target_mac=None, source_mac=None):
     
     try:
@@ -60,7 +63,7 @@ def arp_cache_poison(target_ip=None, router_ip=None, router_mac=None, target_mac
 
 
 
-
+#Scapy ARP insertion under layer 2 protocol per VLAN
 def arp_vlan_poison():
     target_ip = console.input("[yellow]| Enter Target IP:")
     target_mac = get_mac(target_ip)
