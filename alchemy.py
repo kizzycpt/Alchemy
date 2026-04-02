@@ -16,6 +16,16 @@ from poisons.ARP import arp_cache_poison, arp_vlan_poison
 #Global Variables
 console = Console()
 gatewayscan = gateway_info()
+bad_iface_prefixes = ("lo", "docker", "wg", "br-", "veth", "virbr", "zt", "vboxnet")
+
+#------------------------------------------------------------------
+"""
+def iface_input():
+    ifaces = netifaces.interfaces()
+
+    for iface in ifaces:
+        print(ifaces)
+"""
 
 #------------------------------------------------------------------
 

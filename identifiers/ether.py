@@ -53,7 +53,7 @@ def get_mac(ip):
 #Recieving Source MAC for Packet Sending
 def get_my_mac():
     try:
-        for iface in netifaces.interfaces():
+        for iface in netifaces.interfaces(): 
             if iface.startswith(bad_iface_prefixes):
                 continue
             
