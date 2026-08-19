@@ -3,11 +3,9 @@ import ipaddress, socket, time
 from rich.console import Console
 from rich.table import Table
 from rich.live import Live
-import time
 import pyfiglet
 from termcolor import colored
 import netifaces
-import ipaddress
 from identifiers.ether import get_mac, get_my_mac, arp_scan
 from identifiers.gateway import gateway_info
 from poisons.ARP import arp_cache_poison, arp_vlan_poison
@@ -75,7 +73,6 @@ if __name__ == "__main__":
             console.print(f"[red]\n{arp_poison_text}\n")
             console.print("[yellow]------------------------------------------------------------ \n")
             
-            ROUTER_INFO = gateway_info()
 
             arp_type = console.input("[yellow]Classic Cache Poison [1] \nVlan Cache Poison [2] \nPlease Select: ")
 
@@ -87,7 +84,7 @@ if __name__ == "__main__":
             elif arp_type == "2":
                 arp_vlan_poison()
             else:
-                        console.print("[red]Invalid choice. Please select a valid option.")
+                console.print("[red]Invalid choice. Please select a valid option.")
         elif choice == "2":
             console.print("[red]Exiting the tool. Goodbye!")
             break

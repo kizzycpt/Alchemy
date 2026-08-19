@@ -1,35 +1,66 @@
-# Alchemy Poisons (INCOMPLETE)
+# Alchemy
 
-**Disclaimer**  
-This project demonstrates scanning and poisoning (MITM) techniques using Python and Scapy.
-Currently V1 (Layer 2 MITM and Sniffing)  
-It is provided **strictly for educational and research purposes only**.  
-Do not use it on networks without **explicit authorization**.  
-The author is not responsible for any misuse of this tool.
+> **⚠️ Legacy / archived.** This is a V1 educational MITM toolkit and is no longer actively developed. It is kept as a reference snapshot. Do not expect maintenance.
 
----
+A Python + Scapy tool for Layer-2 network reconnaissance and ARP-based MITM demonstrations, with a Rich/PyFiglet CLI.
 
-##  Features
-- Detects local network subnet automatically.
-- Performs ARP scans to discover devices (IP, MAC, Hostname).
-- Demonstrates ARP packet crafting for educational purposes.
-- CLI interface with styled output using [Rich](https://github.com/Textualize/rich) and [PyFiglet](https://github.com/pwaller/pyfiglet).
+> **Authorized use only.** This performs ARP cache poisoning, an active MITM attack. Run it **only** on networks you own or are explicitly authorized to test. The author is not responsible for misuse.
 
 ---
 
-##  Requirements
-See [requirements.txt](requirements.txt) for the full list.  
-Key dependencies:
-- scapy  
-- rich  
-- pyfiglet  
-- termcolor  
-- netifaces  
+## What it does
 
-Install with:
+- Auto-detects the local subnet
+- ARP-scans the LAN to discover hosts (IP ⇄ MAC)
+- Resolves your own interface/MAC and a target's MAC
+- Reads gateway information
+- Crafts and sends ARP cache-poisoning packets:
+  - **Classic** cache poison (target ↔ gateway)
+  - **VLAN** (802.1Q double-tag) variant
+- Styled CLI via [Rich](https://github.com/Textualize/rich) and [PyFiglet](https://github.com/pwaller/pyfiglet)
+
+---
+
+## Layout
+
+```
+alchemy/
+├─ alchemy.py                # entrypoint (menu)
+├─ identifiers/
+│  ├─ ether.py               # subnet, MAC resolution, ARP scan
+│  └─ gateway.py             # gateway IP/MAC lookup
+└─ poisons/
+   └─ ARP.py                 # classic + VLAN ARP cache poisoning
+```
+
+---
+
+## Requirements
+
+- Python 3.10+
+- Linux (raw sockets for Scapy)
+- Root / `CAP_NET_RAW` for sending crafted frames
+
+Packages: `scapy`, `rich`, `pyfiglet`, `termcolor`, `netifaces` — see `requirements.txt`.
+
+---
+
+## Install & run
 
 ```bash
-
+python3 -m venv venv
+source venv/bin/activate
 pip install -r requirements.txt
 
-**Be sure to run this script under a contained/virtual environment.** 
+sudo -E python3 alchemy.py
+```
+
+Menu: `1` ARP poison (then choose classic or VLAN) · `2` exit.
+
+Run inside a virtual environment, and only against authorized targets.
+
+---
+
+## Status
+
+V1 — Layer-2 MITM and sniffing. Archived; superseded by later tooling.

